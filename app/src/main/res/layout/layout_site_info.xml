@@ -232,4 +232,5 @@
         android:layout_alignLeft="@+id/categorie"
 
         android:text="TextView" />
+
 </RelativeLayout>

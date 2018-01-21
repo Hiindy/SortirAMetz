@@ -5,14 +5,18 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
+import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
 import com.example.cindy.sortirametz.Vue.BDD.AjoutBDD;
 
@@ -47,6 +51,22 @@ public class ConsultationBDD extends AppCompatActivity {
         ListView listView = (ListView) findViewById(R.id.listViewSite);
         // Assign adapter to ListView
         listView.setAdapter(adapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> listView, View view, int position, long id) {
+                Cursor cursor = (Cursor) listView.getItemAtPosition(position);
+                Intent intent = new Intent(ConsultationBDD.this, ModifierBDD.class);
+                intent.putExtra("id", cursor.getString(cursor.getColumnIndex(Site.COLUMN_ID)));
+                intent.putExtra("latitude", cursor.getString(cursor.getColumnIndex(Site.COLUMN_LATITUDE)));
+                intent.putExtra("longitude", cursor.getString(cursor.getColumnIndex(Site.COLUMN_LONGITUDE)));
+                intent.putExtra("adresse", cursor.getString(cursor.getColumnIndex(Site.COLUMN_ADRESSE)));
+                intent.putExtra("categorie", cursor.getString(cursor.getColumnIndex(Site.COLUMN_CATEGORIE)));
+                intent.putExtra("resume", cursor.getString(cursor.getColumnIndex(Site.COLUMN_RESUME)));
+                intent.putExtra("nom", cursor.getString(cursor.getColumnIndex(Site.COLUMN_NOM)));
+                ConsultationBDD.this.startActivity(intent);
+            }
+        });
 
 
     }
