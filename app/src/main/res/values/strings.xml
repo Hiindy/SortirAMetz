@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">SortirAMetz</string>
     <string name="title_activity_client_carte">Carte</string>
-    <string name="consultation">Consultation</string>
+    <string name="bdd">Voir la base de données</string>
     <string name="modification">Modification/Suppression</string>
+    <string name="ajout">Ajouter un site</string>
+    <string name="modifier">Modifier un site</string>
+    <string name="supprimer">Supprimer un site</string>
 </resources>

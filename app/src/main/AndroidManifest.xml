@@ -34,7 +34,7 @@
             android:authorities="com.example.cindy.basededonnees.BDD.SiteProvider" />
 
         <activity
-            android:name=".Carte.ClientCarte"
+            android:name=".Vue.Carte.ClientCarte"
             android:label="@string/title_activity_client_carte">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,7 +42,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ConsultationBDD"></activity>
+        <activity android:name=".Vue.BDD.ConsultationBDD" />
+        <activity android:name=".Vue.BDD.AjoutBDD"></activity>
     </application>
 
 </manifest>

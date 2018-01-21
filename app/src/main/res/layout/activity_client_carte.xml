@@ -16,4 +16,4 @@
     map:uiTiltGestures="true"
     map:uiZoomControls="true"
     map:uiZoomGestures="true"
-    tools:context="com.example.cindy.sortirametz.Carte.ClientCarte" />
+    tools:context=".Vue.Vue.Carte.ClientCarte" />

@@ -1,16 +1,20 @@
-package com.example.cindy.sortirametz;
+package com.example.cindy.sortirametz.Vue.BDD;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
-import com.example.cindy.sortirametz.Carte.ClientCarte;
+import com.example.cindy.sortirametz.R;
+import com.example.cindy.sortirametz.Vue.BDD.AjoutBDD;
 
 public class ConsultationBDD extends AppCompatActivity {
     ListView listeSite;
@@ -45,5 +49,30 @@ public class ConsultationBDD extends AppCompatActivity {
         listView.setAdapter(adapter);
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_bdd, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.consultation:
+                Intent intentConsultation = new Intent(ConsultationBDD.this, ConsultationBDD.class);
+                ConsultationBDD.this.startActivity(intentConsultation);
+                return true;
+            case R.id.ajout:
+                Intent intentAjout = new Intent(ConsultationBDD.this, AjoutBDD.class);
+                ConsultationBDD.this.startActivity(intentAjout);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }
