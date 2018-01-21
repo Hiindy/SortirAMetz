@@ -3,9 +3,6 @@ package com.example.cindy.sortirametz.BDD;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.provider.BaseColumns;
-import android.util.Log;
-
-import java.io.IOException;
 
 public class Site implements BaseColumns{
 
@@ -36,14 +33,10 @@ public class Site implements BaseColumns{
         this.longitude = longitude;
     }
 
-    public Site(String nom, String latitude, String longitude, String adresse, String categorie, String resume) {
+    public Site(String nom, double latitude, double longitude, String adresse, String categorie, String resume) {
         this.nom = nom;
-        try {
-            this.latitude = Double.parseDouble(latitude);
-            this.longitude = Double.parseDouble(longitude);
-        }catch (NumberFormatException e) {
-            Log.e("TAG", "Couldn't parse latitude and/or longitude");
-        }
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.adresse = adresse;
         this.categorie = categorie;
         this.resume = resume;
