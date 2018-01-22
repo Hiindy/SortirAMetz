@@ -13,7 +13,7 @@
 
         android:id="@+id/textView"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -29,7 +29,7 @@
 
         android:id="@+id/id"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -43,7 +43,7 @@
 
         android:id="@+id/textView1"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -60,7 +60,7 @@
 
         android:id="@+id/textView2"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -110,7 +110,7 @@
 
         android:id="@+id/longitude"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -127,7 +127,7 @@
 
         android:id="@+id/adresse"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -144,7 +144,7 @@
 
         android:id="@+id/latitude"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -159,7 +159,7 @@
 
         android:id="@+id/nom"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -189,7 +189,7 @@
 
         android:id="@+id/categorie"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 
@@ -221,7 +221,7 @@
 
         android:id="@+id/resume"
 
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
 
         android:layout_height="wrap_content"
 

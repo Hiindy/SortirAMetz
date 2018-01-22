@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.cindy.sortirametz.Vue.Vue.BDD.AjoutBDD">
+    tools:context="com.example.cindy.sortirametz.Vue.BDD.AjoutBDD">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -18,8 +18,8 @@
 
         <TextView
             android:id="@+id/nom"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:text="Nom : "
             android:textAlignment="viewStart"
             android:textColor="@android:color/black"

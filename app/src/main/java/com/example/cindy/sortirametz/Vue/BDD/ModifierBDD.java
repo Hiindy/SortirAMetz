@@ -1,5 +1,6 @@
 package com.example.cindy.sortirametz.Vue.BDD;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,11 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.cindy.sortirametz.BDD.Site;
+import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
+import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
 
 public class ModifierBDD extends AppCompatActivity {
 
     private Site site;
+    private EditText nom ;
+    private EditText latitude;
+    private EditText longitude;
+    private EditText adresse ;
+    private EditText categorie ;
+    private EditText resume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +45,12 @@ public class ModifierBDD extends AppCompatActivity {
             site.setResume(extras.getString("resume"));
         }
 
-        EditText nom = (EditText) findViewById(R.id.modifNom);
-        EditText latitude = (EditText) findViewById(R.id.modifLatitude);
-        EditText longitude = (EditText) findViewById(R.id.modifLongitude);
-        EditText adresse = (EditText) findViewById(R.id.modifAdresse);
-        EditText categorie = (EditText) findViewById(R.id.modifCategorie);
-        EditText resume = (EditText) findViewById(R.id.modifResume);
+        nom = (EditText) findViewById(R.id.modifNom);
+        latitude = (EditText) findViewById(R.id.modifLatitude);
+        longitude = (EditText) findViewById(R.id.modifLongitude);
+       adresse = (EditText) findViewById(R.id.modifAdresse);
+        categorie = (EditText) findViewById(R.id.modifCategorie);
+        resume = (EditText) findViewById(R.id.modifResume);
 
         nom.setText(site.getNom());
         latitude.setText(String.valueOf(site.getLatitude()));
@@ -49,7 +58,85 @@ public class ModifierBDD extends AppCompatActivity {
         adresse.setText(site.getAdresse());
         categorie.setText(site.getAdresse());
         resume.setText(site.getResume());
-    }
+
+        final Button buttonModifier = findViewById(R.id.btn_modifier);
+        buttonModifier.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Double newLatitude;
+                Double newLongitude;
+
+                if (TextUtils.isEmpty(nom.getText())) {
+                    nom.setError("Le nom est obligatoire");
+                } else if (TextUtils.isEmpty(latitude.getText())) {
+                    latitude.setError("La latitude est obligatoire");
+                } else if (TextUtils.isEmpty(longitude.getText())) {
+                    longitude.setError("La longitude est obligatoire");
+                } else {
+                    try {
+                        newLatitude = Double.parseDouble(latitude.getText().toString());
+                        newLongitude = Double.parseDouble(longitude.getText().toString());
+                    } catch (final NumberFormatException e) {
+                        newLatitude = 0.0;
+                        newLongitude = 0.0;
+                    }
+                    // On met à jour le site
+                    site.setNom(nom.getText().toString());
+                    site.setLatitude(newLatitude);
+                    site.setLongitude(newLongitude);
+                    site.setAdresse(adresse.getText().toString());
+                    site.setCategorie(categorie.getText().toString());
+                    site.setResume(resume.getText().toString());
+
+                    site.modifierSite(getContentResolver(), site);
+
+                    new AlertDialog.Builder(ModifierBDD.this).setTitle("").setMessage("Site modifié!").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intentConsultation = new Intent(ModifierBDD.this, ConsultationBDD.class);
+
+                            ModifierBDD.this.startActivity(intentConsultation);
+                        }
+                    }).show();
+
+                }
+            }
+        });
+
+        final Button buttonSupprimer = findViewById(R.id.btn_supprimer);
+        buttonSupprimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                               site.supprimerSite(getContentResolver(), site);
+                                new AlertDialog.Builder(ModifierBDD.this).setTitle("").setMessage("Site supprimé !").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intentConsultation = new Intent(ModifierBDD.this, ConsultationBDD.class);
+
+                                        ModifierBDD.this.startActivity(intentConsultation);
+                                    }
+                                }).show();
+
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                break;
+                        }
+                    }
+                };
+                AlertDialog.Builder builder = new AlertDialog.Builder(ModifierBDD.this);
+                builder.setMessage("Voulez-vous vraiment supprimer le site " + site.getNom() +" ?").setPositiveButton("Oui", dialogClickListener)
+                        .setNegativeButton("Non", dialogClickListener).show();
+            }
+
+            });
+        }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,5 +162,6 @@ public class ModifierBDD extends AppCompatActivity {
 
         }
     }
+
 
 }

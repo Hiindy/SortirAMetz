@@ -1,5 +1,6 @@
 package com.example.cindy.sortirametz.Vue.BDD;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -62,10 +63,15 @@ public class AjoutBDD extends AppCompatActivity {
                             categorie.getText().toString(),
                             resume.getText().toString());
                     site.ajouterSite(getContentResolver(), site);
-                    new AlertDialog.Builder(AjoutBDD.this).setTitle("").setMessage("Site ajouté!").setNeutralButton("Fermer", null).show();
-                    Intent intentConsultation = new Intent(AjoutBDD.this, ConsultationBDD.class);
+                    new AlertDialog.Builder(AjoutBDD.this).setTitle("").setMessage("Site ajouté!").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intentConsultation = new Intent(AjoutBDD.this, ConsultationBDD.class);
 
-                    AjoutBDD.this.startActivity(intentConsultation);
+                            AjoutBDD.this.startActivity(intentConsultation);
+                        }
+                    }).show();
+
                 }
 
             }

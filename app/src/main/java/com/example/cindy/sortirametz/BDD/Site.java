@@ -62,6 +62,23 @@ public class Site implements BaseColumns{
         values.put(Site.COLUMN_CATEGORIE, "religieux");
         values.put(Site.COLUMN_RESUME, "ceci est un deuxième test");
         content.insert(SiteDatabaseHelper.CONTENT_URI, values);*/
+        ContentValues values = this.setContentValues(site);
+
+        content.insert(SiteDatabaseHelper.CONTENT_URI, values);
+        values.clear();
+    }
+
+    public void modifierSite(ContentResolver contentResolver, Site site) {
+        ContentValues values = this.setContentValues(site);
+        contentResolver.update(SiteDatabaseHelper.CONTENT_URI,values,Site.COLUMN_ID+"=?",new String[] {String.valueOf(site.getId())});
+
+    }
+
+    public void supprimerSite(ContentResolver contentResolver, Site site) {
+        contentResolver.delete(SiteDatabaseHelper.CONTENT_URI, Site.COLUMN_ID+"=?",new String[] {String.valueOf(site.getId())});
+    }
+
+    public ContentValues setContentValues(Site site){
         ContentValues values = new ContentValues();
         values.put(this.COLUMN_NOM, site.getNom());
         values.put(this.COLUMN_LATITUDE, site.getLatitude());
@@ -70,9 +87,10 @@ public class Site implements BaseColumns{
         values.put(this.COLUMN_CATEGORIE, site.getCategorie());
         values.put(this.COLUMN_RESUME, site.getResume());
 
-        content.insert(SiteDatabaseHelper.CONTENT_URI, values);
-        values.clear();
+        return values;
     }
+
+
 
     public int getId() {
         return id;
@@ -129,4 +147,7 @@ public class Site implements BaseColumns{
     public void setResume(String resume) {
         this.resume = resume;
     }
+
+
+
 }
