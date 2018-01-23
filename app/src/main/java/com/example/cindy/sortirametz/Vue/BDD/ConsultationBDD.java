@@ -19,15 +19,25 @@ import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
 import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
 import com.example.cindy.sortirametz.Vue.BDD.AjoutBDD;
+import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
+import com.google.android.gms.maps.model.LatLng;
 
-public class ConsultationBDD extends AppCompatActivity {
-    ListView listeSite;
+import java.io.Serializable;
+
+public class ConsultationBDD extends AppCompatActivity implements Serializable {
+    private ListView listeSite;
+    private LatLng positionCourrante;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_consultation_bdd);
         displayContentProvider();
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            positionCourrante = new LatLng(extras.getDouble("positionLatitude"), extras.getDouble("positionLongitude"));
+        }
     }
 
 
@@ -64,6 +74,8 @@ public class ConsultationBDD extends AppCompatActivity {
                 intent.putExtra("categorie", cursor.getString(cursor.getColumnIndex(Site.COLUMN_CATEGORIE)));
                 intent.putExtra("resume", cursor.getString(cursor.getColumnIndex(Site.COLUMN_RESUME)));
                 intent.putExtra("nom", cursor.getString(cursor.getColumnIndex(Site.COLUMN_NOM)));
+                intent.putExtra("positionLatitude", positionCourrante.latitude);
+                intent.putExtra("positionLongitude", positionCourrante.longitude);
                 ConsultationBDD.this.startActivity(intent);
             }
         });
@@ -84,10 +96,14 @@ public class ConsultationBDD extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.consultation:
                 Intent intentConsultation = new Intent(ConsultationBDD.this, ConsultationBDD.class);
+                intentConsultation.putExtra("positionLatitude", this.positionCourrante.latitude);
+                intentConsultation.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ConsultationBDD.this.startActivity(intentConsultation);
                 return true;
             case R.id.ajout:
                 Intent intentAjout = new Intent(ConsultationBDD.this, AjoutBDD.class);
+                intentAjout.putExtra("positionLatitude", this.positionCourrante.latitude);
+                intentAjout.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ConsultationBDD.this.startActivity(intentAjout);
                 return true;
             default:

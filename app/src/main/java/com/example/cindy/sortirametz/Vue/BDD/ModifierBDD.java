@@ -11,22 +11,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
 import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
+import com.google.android.gms.maps.model.LatLng;
 
 public class ModifierBDD extends AppCompatActivity {
 
     private Site site;
-    private EditText nom ;
+    private EditText nom;
     private EditText latitude;
     private EditText longitude;
-    private EditText adresse ;
-    private EditText categorie ;
+    private EditText adresse;
+    private EditText categorie;
     private EditText resume;
+    private LatLng positionCourrante;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +47,13 @@ public class ModifierBDD extends AppCompatActivity {
             site.setAdresse(extras.getString("adresse"));
             site.setCategorie(extras.getString("categorie"));
             site.setResume(extras.getString("resume"));
+            positionCourrante = new LatLng(extras.getDouble("positionLatitude"), extras.getDouble("positionLongitude"));
         }
 
         nom = (EditText) findViewById(R.id.modifNom);
         latitude = (EditText) findViewById(R.id.modifLatitude);
         longitude = (EditText) findViewById(R.id.modifLongitude);
-       adresse = (EditText) findViewById(R.id.modifAdresse);
+        adresse = (EditText) findViewById(R.id.modifAdresse);
         categorie = (EditText) findViewById(R.id.modifCategorie);
         resume = (EditText) findViewById(R.id.modifResume);
 
@@ -58,6 +63,25 @@ public class ModifierBDD extends AppCompatActivity {
         adresse.setText(site.getAdresse());
         categorie.setText(site.getAdresse());
         resume.setText(site.getResume());
+
+        /* Checkbox */
+        CheckBox okDonnees = (CheckBox) findViewById(R.id.okDonneesModif);
+         /* Event sur la sélection ou non de la checkbox */
+        okDonnees.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    latitude.setText(String.valueOf(positionCourrante.latitude));
+                    latitude.setFocusable(false);
+                    longitude.setText(String.valueOf(positionCourrante.longitude));
+                    longitude.setFocusable(false);
+                } else {
+                    latitude.setFocusableInTouchMode(true);
+                    longitude.setFocusableInTouchMode(true);
+                }
+
+            }
+        });
 
         final Button buttonModifier = findViewById(R.id.btn_modifier);
         buttonModifier.setOnClickListener(new View.OnClickListener() {
@@ -110,9 +134,9 @@ public class ModifierBDD extends AppCompatActivity {
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
+                        switch (which) {
                             case DialogInterface.BUTTON_POSITIVE:
-                               site.supprimerSite(getContentResolver(), site);
+                                site.supprimerSite(getContentResolver(), site);
                                 new AlertDialog.Builder(ModifierBDD.this).setTitle("").setMessage("Site supprimé !").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -130,12 +154,12 @@ public class ModifierBDD extends AppCompatActivity {
                     }
                 };
                 AlertDialog.Builder builder = new AlertDialog.Builder(ModifierBDD.this);
-                builder.setMessage("Voulez-vous vraiment supprimer le site " + site.getNom() +" ?").setPositiveButton("Oui", dialogClickListener)
+                builder.setMessage("Voulez-vous vraiment supprimer le site " + site.getNom() + " ?").setPositiveButton("Oui", dialogClickListener)
                         .setNegativeButton("Non", dialogClickListener).show();
             }
 
-            });
-        }
+        });
+    }
 
 
     @Override

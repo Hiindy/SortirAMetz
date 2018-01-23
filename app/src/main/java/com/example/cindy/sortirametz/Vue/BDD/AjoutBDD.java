@@ -12,34 +12,70 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
+import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
+import com.google.android.gms.maps.model.LatLng;
 
 public class AjoutBDD extends AppCompatActivity {
+    private LatLng positionCourrante;
+    private EditText nom;
+    private EditText latitude;
+    private EditText longitude;
+    private EditText adresse;
+    private EditText categorie;
+    private EditText resume;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ajout_bdd);
 
-        EditText txtEditLatitude = (EditText) findViewById(R.id.ajoutLatitude);
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            positionCourrante = new LatLng(extras.getDouble("positionLatitude"), extras.getDouble("positionLongitude"));
+        }
+
+        nom = (EditText) findViewById(R.id.ajoutNom);
+        latitude = (EditText) findViewById(R.id.ajoutLatitude);
+        longitude = (EditText) findViewById(R.id.ajoutLongitude);
+        adresse = (EditText) findViewById(R.id.ajoutAdresse);
+        categorie = (EditText) findViewById(R.id.ajoutCategorie);
+        resume = (EditText) findViewById(R.id.ajoutResume);
+
+        /* Checkbox */
+        CheckBox okDonnees = (CheckBox) findViewById(R.id.okDonnees);
+         /* Event sur la sélection ou non de la checkbox */
+        okDonnees.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    latitude.setText(String.valueOf(positionCourrante.latitude));
+                    latitude.setFocusable(false);
+                    longitude.setText(String.valueOf(positionCourrante.longitude));
+                    longitude.setFocusable(false);
+                } else {
+                    latitude.setFocusableInTouchMode(true);
+                    longitude.setFocusableInTouchMode(true);
+                }
+
+            }
+        });
 
 
         final Button buttonAjouter = findViewById(R.id.btn_ajouter);
         buttonAjouter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText nom = (EditText) findViewById(R.id.ajoutNom);
-                EditText latitude = (EditText) findViewById(R.id.ajoutLatitude);
-                EditText longitude = (EditText) findViewById(R.id.ajoutLongitude);
-                EditText adresse = (EditText) findViewById(R.id.ajoutAdresse);
-                EditText categorie = (EditText) findViewById(R.id.ajoutCategorie);
-                EditText resume = (EditText) findViewById(R.id.ajoutResume);
+
                 Double newLatitude;
                 Double newLongitude;
+
 
                 if (TextUtils.isEmpty(nom.getText())) {
                     nom.setError("Le nom est obligatoire");
@@ -48,7 +84,7 @@ public class AjoutBDD extends AppCompatActivity {
                 } else if (TextUtils.isEmpty(longitude.getText())) {
                     longitude.setError("La longitude est obligatoire");
                 } else {
-                    try{
+                    try {
                         newLatitude = Double.parseDouble(latitude.getText().toString());
                         newLongitude = Double.parseDouble(longitude.getText().toString());
                     } catch (final NumberFormatException e) {

@@ -6,4 +6,5 @@
     <string name="ajout">Ajouter un site</string>
     <string name="modifier">Modifier un site</string>
     <string name="supprimer">Supprimer un site</string>
+    <string name="okDonnees">Utiliser mes données de localisation</string>
 </resources>

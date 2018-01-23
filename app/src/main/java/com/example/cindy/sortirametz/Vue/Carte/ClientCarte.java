@@ -27,10 +27,14 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.Serializable;
+
 public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
+    private LatLng positionCourrante;
+    private int rayon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +84,10 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                         if (location != null) {
                             // Logic to handle location object
                             // On déplace la caméra sur la position de l'utilisateur
-                            LatLng position = new LatLng(location.getLatitude(), location.getLongitude());
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 30));
+                            positionCourrante = new LatLng(location.getLatitude(), location.getLongitude());
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(positionCourrante, 30));
                             CircleOptions circleOptions = new CircleOptions()
-                                    .center(position)
+                                    .center(positionCourrante)
                                     .radius(200)
                                     .strokeWidth(1)
                                     .strokeColor(Color.RED);
@@ -107,6 +111,8 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         switch (item.getItemId()) {
             case R.id.bdd:
                 Intent intentMain = new Intent(ClientCarte.this, ConsultationBDD.class);
+                intentMain.putExtra("positionLatitude", this.positionCourrante.latitude);
+                intentMain.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ClientCarte.this.startActivity(intentMain);
                 return true;
             default:
@@ -116,6 +122,27 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
     }
 
 
+    public GoogleMap getmMap() {
+        return mMap;
+    }
 
+    public void setmMap(GoogleMap mMap) {
+        this.mMap = mMap;
+    }
 
+    public LatLng getPositionCourrante() {
+        return positionCourrante;
+    }
+
+    public void setPositionCourrante(LatLng positionCourrante) {
+        this.positionCourrante = positionCourrante;
+    }
+
+    public int getRayon() {
+        return rayon;
+    }
+
+    public void setRayon(int rayon) {
+        this.rayon = rayon;
+    }
 }
