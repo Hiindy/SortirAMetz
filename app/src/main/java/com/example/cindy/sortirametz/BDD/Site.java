@@ -2,9 +2,10 @@ package com.example.cindy.sortirametz.BDD;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.provider.BaseColumns;
 
-public class Site implements BaseColumns{
+public class Site implements BaseColumns {
 
     // Colonnes de la base de données
     public static final String COLUMN_ID = "_id";
@@ -25,7 +26,8 @@ public class Site implements BaseColumns{
     private String categorie;
     private String resume;
 
-    public Site(){}
+    public Site() {
+    }
 
     public Site(String nom, double latitude, double longitude) {
         this.nom = nom;
@@ -42,7 +44,7 @@ public class Site implements BaseColumns{
         this.resume = resume;
     }
 
-    public  void ajouterSite(ContentResolver content, Site site) {
+    public void ajouterSite(ContentResolver content, Site site) {
        /* // On crée un ContentValues pour ajouter les différents attributs
         ContentValues values = new ContentValues();
         values.put(Site.COLUMN_NOM, "Temple Neuf");
@@ -70,15 +72,26 @@ public class Site implements BaseColumns{
 
     public void modifierSite(ContentResolver contentResolver, Site site) {
         ContentValues values = this.setContentValues(site);
-        contentResolver.update(SiteDatabaseHelper.CONTENT_URI,values,Site.COLUMN_ID+"=?",new String[] {String.valueOf(site.getId())});
+        contentResolver.update(SiteDatabaseHelper.CONTENT_URI, values, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
 
     }
 
     public void supprimerSite(ContentResolver contentResolver, Site site) {
-        contentResolver.delete(SiteDatabaseHelper.CONTENT_URI, Site.COLUMN_ID+"=?",new String[] {String.valueOf(site.getId())});
+        contentResolver.delete(SiteDatabaseHelper.CONTENT_URI, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
     }
 
-    public ContentValues setContentValues(Site site){
+    public static Cursor getAllSite(ContentResolver contentResolver){
+        String[] projection = new String[] {COLUMN_ID,
+                COLUMN_NOM,
+                COLUMN_LATITUDE,
+                COLUMN_LONGITUDE,
+                COLUMN_ADRESSE,
+                COLUMN_CATEGORIE,
+                COLUMN_RESUME};
+       return contentResolver.query(SiteDatabaseHelper.CONTENT_URI, projection, null, null, null);
+    }
+
+    public ContentValues setContentValues(Site site) {
         ContentValues values = new ContentValues();
         values.put(this.COLUMN_NOM, site.getNom());
         values.put(this.COLUMN_LATITUDE, site.getLatitude());
@@ -89,7 +102,6 @@ public class Site implements BaseColumns{
 
         return values;
     }
-
 
 
     public int getId() {
@@ -147,7 +159,6 @@ public class Site implements BaseColumns{
     public void setResume(String resume) {
         this.resume = resume;
     }
-
 
 
 }

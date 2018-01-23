@@ -24,7 +24,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.io.Serializable;
 
-public class ConsultationBDD extends AppCompatActivity implements Serializable {
+public class ConsultationBDD extends AppCompatActivity {
     private ListView listeSite;
     private LatLng positionCourrante;
 
@@ -47,7 +47,7 @@ public class ConsultationBDD extends AppCompatActivity implements Serializable {
 
         int[] textView = {R.id.id, R.id.nom, R.id.latitude, R.id.longitude, R.id.adresse, R.id.categorie, R.id.resume};
         Uri mContacts = SiteDatabaseHelper.CONTENT_URI;
-        Cursor cur = managedQuery(mContacts, columns, null, null, null);
+        Cursor cur = Site.getAllSite(getContentResolver());
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(
                 this,

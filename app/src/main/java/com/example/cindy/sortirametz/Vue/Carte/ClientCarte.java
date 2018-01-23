@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,6 +29,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.Console;
 import java.io.Serializable;
 
 public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback {
@@ -34,7 +37,8 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
     private LatLng positionCourrante;
-    private int rayon;
+    private Location myLocation;
+    private float rayon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +50,10 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+
+        myLocation = new Location("LocationCourrante");
+
+        positionCourrante = new LatLng(0,0);
 
         //ajouterSite();
     }
@@ -62,6 +70,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        this.rayon = 200;
         mMap = googleMap;
 
 
@@ -82,6 +91,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                     public void onSuccess(Location location) {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
+                            myLocation = location;
                             // Logic to handle location object
                             // On déplace la caméra sur la position de l'utilisateur
                             positionCourrante = new LatLng(location.getLatitude(), location.getLongitude());
@@ -96,6 +106,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
 
+        this.majMarqueurs();
     }
 
     @Override
@@ -138,11 +149,31 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         this.positionCourrante = positionCourrante;
     }
 
-    public int getRayon() {
+    public float getRayon() {
         return rayon;
     }
 
-    public void setRayon(int rayon) {
+    public void setRayon(float rayon) {
         this.rayon = rayon;
+    }
+
+    public void majMarqueurs() {
+        Cursor allSite = Site.getAllSite(getContentResolver());
+        Log.d("TAG", "Ma location : " + positionCourrante.latitude + " , " + positionCourrante.longitude);
+        if (allSite != null) {
+            try {
+                while (allSite.moveToNext()) {
+                    Location site = new Location("Site");
+                    site.setLatitude(Double.parseDouble(allSite.getString(allSite.getColumnIndex(Site.COLUMN_LATITUDE))));
+                    site.setLongitude(Double.parseDouble(allSite.getString(allSite.getColumnIndex(Site.COLUMN_LONGITUDE))));
+                    Log.d("TAG",allSite.getString(allSite.getColumnIndex(Site.COLUMN_NOM)) + " = " +  String.valueOf(myLocation.distanceTo(site)) + "Latitude : " + site.getLatitude() + " Longitude : " + site.getLatitude());
+                    if(myLocation.distanceTo(site) < this.rayon){
+                        Log.d("TAG", allSite.getString(allSite.getColumnIndex(Site.COLUMN_NOM)));
+                    }
+                }
+            } finally {
+                allSite.close();
+            }
+        }
     }
 }
