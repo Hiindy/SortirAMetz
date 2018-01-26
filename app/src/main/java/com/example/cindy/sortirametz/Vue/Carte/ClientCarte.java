@@ -1,8 +1,6 @@
 package com.example.cindy.sortirametz.Vue.Carte;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +21,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
-import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
+
 import com.example.cindy.sortirametz.Vue.BDD.ConsultationBDD;
 import com.example.cindy.sortirametz.R;
 import com.google.android.gms.common.ConnectionResult;
@@ -47,14 +43,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
 
-import java.io.Console;
-import java.io.Serializable;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnCameraMoveStartedListener{
@@ -82,7 +72,6 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
 
 
 

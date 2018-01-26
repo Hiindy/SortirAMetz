@@ -7,7 +7,7 @@
     tools:context="com.example.cindy.sortirametz.Vue.BDD.AjoutBDD">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -45,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Latitude : "
-            android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="Latitude : " />
@@ -63,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Longitude : "
-            android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="Longitude : " />
@@ -77,11 +75,25 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Catégorie : "
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            tools:text="Catégorie : " />
+
+        <Spinner
+            android:id="@+id/ajoutCategorie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <TextView
             android:id="@+id/textView12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Adresse : "
-            android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="Adresse : " />
@@ -95,29 +107,10 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
-            android:id="@+id/textView11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Catégorie : "
-            android:textAlignment="viewStart"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            tools:text="Catégorie : " />
-
-        <EditText
-            android:id="@+id/ajoutCategorie"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
             android:id="@+id/textView10"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Résumé : "
-            android:textAlignment="viewStart"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             tools:text="Résumé : " />

@@ -2,24 +2,26 @@ package com.example.cindy.sortirametz.Vue.BDD;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.SimpleCursorAdapter;
+import android.widget.Spinner;
 
+import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
-import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
 import com.google.android.gms.maps.model.LatLng;
 
 public class AjoutBDD extends AppCompatActivity {
@@ -28,7 +30,7 @@ public class AjoutBDD extends AppCompatActivity {
     private EditText latitude;
     private EditText longitude;
     private EditText adresse;
-    private EditText categorie;
+    private Spinner categorie;
     private EditText resume;
 
     @Override
@@ -45,8 +47,17 @@ public class AjoutBDD extends AppCompatActivity {
         latitude = (EditText) findViewById(R.id.ajoutLatitude);
         longitude = (EditText) findViewById(R.id.ajoutLongitude);
         adresse = (EditText) findViewById(R.id.ajoutAdresse);
-        categorie = (EditText) findViewById(R.id.ajoutCategorie);
+        categorie = (Spinner) findViewById(R.id.ajoutCategorie);
         resume = (EditText) findViewById(R.id.ajoutResume);
+
+        /* Spinner */
+        String[] listeCategorie = Categorie.listeCategorie;
+
+
+        ArrayAdapter <String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,listeCategorie);
+
+        categorie.setAdapter(adapter);
+
 
         /* Checkbox */
         CheckBox okDonnees = (CheckBox) findViewById(R.id.okDonnees);
@@ -66,6 +77,8 @@ public class AjoutBDD extends AppCompatActivity {
 
             }
         });
+
+
 
 
         final Button buttonAjouter = findViewById(R.id.btn_ajouter);
@@ -96,7 +109,7 @@ public class AjoutBDD extends AppCompatActivity {
                             newLatitude,
                             newLongitude,
                             adresse.getText().toString(),
-                            categorie.getText().toString(),
+                            categorie.getSelectedItem().toString(),
                             resume.getText().toString());
                     site.ajouterSite(getContentResolver(), site);
                     new AlertDialog.Builder(AjoutBDD.this).setTitle("").setMessage("Site ajouté!").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {

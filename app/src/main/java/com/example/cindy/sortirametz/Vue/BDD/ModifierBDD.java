@@ -10,14 +10,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.Spinner;
 
+import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
-import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
-import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -28,7 +29,7 @@ public class ModifierBDD extends AppCompatActivity {
     private EditText latitude;
     private EditText longitude;
     private EditText adresse;
-    private EditText categorie;
+    private Spinner categorie;
     private EditText resume;
     private LatLng positionCourrante;
 
@@ -54,14 +55,21 @@ public class ModifierBDD extends AppCompatActivity {
         latitude = (EditText) findViewById(R.id.modifLatitude);
         longitude = (EditText) findViewById(R.id.modifLongitude);
         adresse = (EditText) findViewById(R.id.modifAdresse);
-        categorie = (EditText) findViewById(R.id.modifCategorie);
+        categorie = (Spinner) findViewById(R.id.modifCategorie);
         resume = (EditText) findViewById(R.id.modifResume);
+
+        /* Spinner */
+        String[] listeCategorie = Categorie.listeCategorie;
+
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,listeCategorie);
+        categorie.setAdapter(adapter);
 
         nom.setText(site.getNom());
         latitude.setText(String.valueOf(site.getLatitude()));
         longitude.setText(String.valueOf(site.getLongitude()));
         adresse.setText(site.getAdresse());
-        categorie.setText(site.getAdresse());
+        categorie.setSelection(adapter.getPosition(site.getCategorie()));
         resume.setText(site.getResume());
 
         /* Checkbox */
@@ -109,7 +117,7 @@ public class ModifierBDD extends AppCompatActivity {
                     site.setLatitude(newLatitude);
                     site.setLongitude(newLongitude);
                     site.setAdresse(adresse.getText().toString());
-                    site.setCategorie(categorie.getText().toString());
+                    site.setCategorie(categorie.getSelectedItem().toString());
                     site.setResume(resume.getText().toString());
 
                     site.modifierSite(getContentResolver(), site);

@@ -66,18 +66,18 @@ public class Site implements BaseColumns {
         content.insert(SiteDatabaseHelper.CONTENT_URI, values);*/
         ContentValues values = this.setContentValues(site);
 
-        content.insert(SiteDatabaseHelper.CONTENT_URI, values);
+        content.insert(BDDSqlLiteHelper.CONTENT_URI, values);
         values.clear();
     }
 
     public void modifierSite(ContentResolver contentResolver, Site site) {
         ContentValues values = this.setContentValues(site);
-        contentResolver.update(SiteDatabaseHelper.CONTENT_URI, values, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
+        contentResolver.update(BDDSqlLiteHelper.CONTENT_URI, values, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
 
     }
 
     public void supprimerSite(ContentResolver contentResolver, Site site) {
-        contentResolver.delete(SiteDatabaseHelper.CONTENT_URI, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
+        contentResolver.delete(BDDSqlLiteHelper.CONTENT_URI, Site.COLUMN_ID + "=?", new String[]{String.valueOf(site.getId())});
     }
 
     public static Cursor getAllSite(ContentResolver contentResolver){
@@ -88,7 +88,7 @@ public class Site implements BaseColumns {
                 COLUMN_ADRESSE,
                 COLUMN_CATEGORIE,
                 COLUMN_RESUME};
-       return contentResolver.query(SiteDatabaseHelper.CONTENT_URI, projection, null, null, null);
+       return contentResolver.query(BDDSqlLiteHelper.CONTENT_URI, projection, null, null, null);
     }
 
     public ContentValues setContentValues(Site site) {

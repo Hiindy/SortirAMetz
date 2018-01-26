@@ -5,7 +5,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,15 +13,10 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
+import com.example.cindy.sortirametz.BDD.BDDSqlLiteHelper;
 import com.example.cindy.sortirametz.BDD.Site;
-import com.example.cindy.sortirametz.BDD.SiteDatabaseHelper;
-import com.example.cindy.sortirametz.BDD.SiteProvider;
 import com.example.cindy.sortirametz.R;
-import com.example.cindy.sortirametz.Vue.BDD.AjoutBDD;
-import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
 import com.google.android.gms.maps.model.LatLng;
-
-import java.io.Serializable;
 
 public class ConsultationBDD extends AppCompatActivity {
     private ListView listeSite;
@@ -46,7 +40,7 @@ public class ConsultationBDD extends AppCompatActivity {
                 Site.COLUMN_LONGITUDE, Site.COLUMN_ADRESSE, Site.COLUMN_CATEGORIE, Site.COLUMN_RESUME};
 
         int[] textView = {R.id.id, R.id.nom, R.id.latitude, R.id.longitude, R.id.adresse, R.id.categorie, R.id.resume};
-        Uri mContacts = SiteDatabaseHelper.CONTENT_URI;
+        Uri mContacts = BDDSqlLiteHelper.CONTENT_URI;
         Cursor cur = Site.getAllSite(getContentResolver());
 
         SimpleCursorAdapter adapter = new SimpleCursorAdapter(

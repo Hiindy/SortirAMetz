@@ -77,6 +77,21 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Catégorie : "
+            android:textAlignment="viewStart"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            tools:text="Catégorie : " />
+
+        <Spinner
+            android:id="@+id/modifCategorie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/textView12"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,24 +107,6 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:inputType="textPostalAddress"
-            android:textColor="@color/colorPrimary" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Catégorie : "
-            android:textAlignment="viewStart"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            tools:text="Catégorie : " />
-
-        <EditText
-            android:id="@+id/modifCategorie"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
             android:textColor="@color/colorPrimary" />
 
         <TextView

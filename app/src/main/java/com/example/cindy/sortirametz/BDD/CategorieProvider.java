@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.util.Log;
 
-public class SiteProvider extends ContentProvider{
+public class CategorieProvider extends ContentProvider {
 
     private BDDSqlLiteHelper dbHelper;
 
@@ -23,7 +23,6 @@ public class SiteProvider extends ContentProvider{
     }
 
 
-
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         long id = getId(uri);
@@ -31,12 +30,12 @@ public class SiteProvider extends ContentProvider{
         try {
             if (id < 0)
                 return db.delete(
-                        BDDSqlLiteHelper.TABLE_NAME_SITE,
+                        BDDSqlLiteHelper.TABLE_NAME_CATEGORIE,
                         selection, selectionArgs);
             else
                 return db.delete(
-                        BDDSqlLiteHelper.TABLE_NAME_SITE,
-                        Site.COLUMN_ID + "=" + id, selectionArgs);
+                        BDDSqlLiteHelper.TABLE_NAME_CATEGORIE,
+                        Categorie.COLUMN_ID + "=" + id, selectionArgs);
         } finally {
             db.close();
         }
@@ -44,7 +43,7 @@ public class SiteProvider extends ContentProvider{
 
     @Override
     public String getType(Uri arg0) {
-        return BDDSqlLiteHelper.MIME_SITE;
+        return BDDSqlLiteHelper.MIME_CATEGORIE;
     }
 
     @Override
@@ -52,11 +51,11 @@ public class SiteProvider extends ContentProvider{
         // TODO Auto-generated method stub
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         try {
-            long id = db.insertOrThrow(          BDDSqlLiteHelper.TABLE_NAME_SITE, null, values);
+            long id = db.insertOrThrow(BDDSqlLiteHelper.TABLE_NAME_CATEGORIE, null, values);
 
             if (id == -1) {
                 throw new RuntimeException(String.format(
-                        "%s : Failed to insert [%s] for unknown reasons.","PolytechProvider", values, uri));
+                        "%s : Failed to insert [%s] for unknown reasons.", "PolytechProvider", values, uri));
             } else {
                 return ContentUris.withAppendedId(uri, id);
             }
@@ -85,12 +84,12 @@ public class SiteProvider extends ContentProvider{
         long id = getId(uri);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         if (id < 0) {
-            return  db.query(BDDSqlLiteHelper.TABLE_NAME_SITE,
+            return db.query(BDDSqlLiteHelper.TABLE_NAME_CATEGORIE,
                     projection, selection, selectionArgs, null, null,
                     sortOrder);
         } else {
-            return      db.query(BDDSqlLiteHelper.TABLE_NAME_SITE,
-                    projection, Site.COLUMN_ID+ "=" + id, null, null, null,
+            return db.query(BDDSqlLiteHelper.TABLE_NAME_CATEGORIE,
+                    projection, Categorie.COLUMN_ID + "=" + id, null, null, null,
                     null);
         }
     }
@@ -103,10 +102,10 @@ public class SiteProvider extends ContentProvider{
 
         try {
             if (id < 0)
-                return db.update( BDDSqlLiteHelper.TABLE_NAME_SITE,values, selection, selectionArgs);
+                return db.update(BDDSqlLiteHelper.TABLE_NAME_CATEGORIE, values, selection, selectionArgs);
             else
-                return db.update(                               BDDSqlLiteHelper.TABLE_NAME_SITE,
-                        values, Site.COLUMN_ID + "=" + id, null);
+                return db.update(BDDSqlLiteHelper.TABLE_NAME_CATEGORIE,
+                        values, Categorie.COLUMN_ID + "=" + id, null);
         } finally {
             db.close();
         }
