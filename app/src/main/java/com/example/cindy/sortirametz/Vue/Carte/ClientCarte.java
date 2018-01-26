@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
@@ -56,7 +57,7 @@ import java.io.Console;
 import java.io.Serializable;
 
 public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnCameraMoveStartedListener{
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
@@ -110,12 +111,11 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-            @Override
-            public void onMapClick(LatLng latLng) {
-                suivreUtilisateur = false;
-            }
-        });
+        suivreUtilisateur = true;
+        mMap.setOnCameraMoveStartedListener(this);
+
+        mMap.setOnMyLocationButtonClickListener(onMyLocationButtonClickListener);
+
 
         mMap.setInfoWindowAdapter(new InfoWindowSite(this));
 
@@ -127,7 +127,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 //Location Permission already granted
                 buildGoogleApiClient();
                 mMap.setMyLocationEnabled(true);
-                suivreUtilisateur = true;
+
             } else {
                 //Request Location Permission
                 checkLocationPermission();
@@ -139,6 +139,17 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onCameraMoveStarted(int reason) {
+        if (reason == GoogleMap.OnCameraMoveStartedListener.REASON_GESTURE) {
+            suivreUtilisateur = false;
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_API_ANIMATION) {
+        } else if (reason == GoogleMap.OnCameraMoveStartedListener
+                .REASON_DEVELOPER_ANIMATION) {
+        }
+    }
+
     LocationCallback mLocationCallback = new LocationCallback(){
         @Override
         public void onLocationResult(LocationResult locationResult) {
@@ -147,13 +158,13 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 majCircle();
                 majMarqueurs();
+                Log.d("TAG", "Callback : 1" + suivreUtilisateur);
+                if(suivreUtilisateur)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
             }
         };
 
     };
-
-
 
     private void majCircle() {
          if(circleOptionsRayon == null) {
@@ -255,11 +266,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE)))));
         marqueurSite.title(site.getString(site.getColumnIndex(Site.COLUMN_NOM)));
         marqueurSite.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        // On met en Snippet le reste des données que l'on veut afficher
-        // Entre chaque données, on ajout le caractère '/' afin de pouvoir récupérer les différentes informations
-        marqueurSite.snippet(site.getString(site.getColumnIndex(Site.COLUMN_ADRESSE)) + '/' +
-                site.getString(site.getColumnIndex(Site.COLUMN_RESUME)) + '/' +
-                "(" + site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE)) + ',' + site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE)) + ')');
+        marqueurSite.snippet(site.getString(site.getColumnIndex(Site.COLUMN_ADRESSE)) + "\n" + site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE)));
 
 
         mMap.addMarker(marqueurSite);
@@ -368,5 +375,36 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
             // permissions this app might request
         }
     }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        majCircle();
+        majMarqueurs();
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
+    private GoogleMap.OnMyLocationButtonClickListener onMyLocationButtonClickListener =
+            new GoogleMap.OnMyLocationButtonClickListener() {
+                @Override
+                public boolean onMyLocationButtonClick() {
+                    suivreUtilisateur = true;
+
+                    return false;
+                }
+            };
 
 }
