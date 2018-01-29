@@ -4,6 +4,10 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.example.cindy.sortirametz.R;
+
+import java.util.ArrayList;
+
 /**
  * Created by Cindy on 26/01/2018.
  */
@@ -14,14 +18,25 @@ public class Categorie {
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_LIBELLE = "libelle";
     public static final String COLUMN_IMAGE = "image";
-
-    public static String[] listeCategorie = {"Restaurant", "Bar", "Eglise", "Musée"};
+    public static ArrayList<Categorie> listeCategories;
 
     // Attributs
     private int id;
     private String libelle;
-    private String image;
+    private int image;
 
+    public Categorie() {
+        listeCategories = new ArrayList();
+        listeCategories.add(new Categorie("Restaurant", R.drawable.restaurant));
+        listeCategories.add(new Categorie("Bar", R.drawable.bar));
+        listeCategories.add(new Categorie("Eglise", R.drawable.eglise));
+        listeCategories.add(new Categorie("Musée", R.drawable.musee));
+    }
+
+    public Categorie(String libelle, int image) {
+        this.libelle = libelle;
+        this.image = image;
+    }
 
     public static Cursor getAllCategories(ContentResolver contentResolver){
         String[] projection = new String[] {COLUMN_ID,
@@ -31,25 +46,6 @@ public class Categorie {
     }
 
     public void ajouterCategorie(ContentResolver content, Categorie categorie) {
-       /* // On crée un ContentValues pour ajouter les différents attributs
-        ContentValues values = new ContentValues();
-        values.put(Site.COLUMN_NOM, "Temple Neuf");
-        values.put(Site.COLUMN_LATITUDE, 15482);
-        values.put(Site.COLUMN_LONGITUDE, 65);
-        values.put(Site.COLUMN_ADRESSE, "blable");
-        values.put(Site.COLUMN_CATEGORIE, "religieux");
-        values.put(Site.COLUMN_RESUME, "ceci est un test");
-
-        content.insert(BDDSqlLiteHelper.CONTENT_URI, values);
-        values.clear();
-
-        values.put(Site.COLUMN_NOM, "Cathédrale de Metz");
-        values.put(Site.COLUMN_LATITUDE, 14.58);
-        values.put(Site.COLUMN_LONGITUDE, 65.78);
-        values.put(Site.COLUMN_ADRESSE, "deuxième");
-        values.put(Site.COLUMN_CATEGORIE, "religieux");
-        values.put(Site.COLUMN_RESUME, "ceci est un deuxième test");
-        content.insert(BDDSqlLiteHelper.CONTENT_URI, values);*/
         ContentValues values = this.setContentValues(categorie);
 
         content.insert(BDDSqlLiteHelper.CONTENT_URI, values);
@@ -80,11 +76,20 @@ public class Categorie {
         this.libelle = libelle;
     }
 
-    public String getImage() {
+    public int getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(int image) {
         this.image = image;
     }
+
+    public static ArrayList<Categorie> getListeCategories() {
+        return listeCategories;
+    }
+
+    public static void setListeCategories(ArrayList<Categorie> listeCategories) {
+        Categorie.listeCategories = listeCategories;
+    }
+
 }

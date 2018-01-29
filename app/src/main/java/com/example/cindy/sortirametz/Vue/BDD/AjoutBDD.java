@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
+import com.example.cindy.sortirametz.Vue.BDD.SpinnerCategorie.SpinnerAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
 public class AjoutBDD extends AppCompatActivity {
@@ -51,11 +52,7 @@ public class AjoutBDD extends AppCompatActivity {
         resume = (EditText) findViewById(R.id.ajoutResume);
 
         /* Spinner */
-        String[] listeCategorie = Categorie.listeCategorie;
-
-
-        ArrayAdapter <String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,listeCategorie);
-
+        SpinnerAdapter adapter = new SpinnerAdapter(this, R.layout.spinner_categorie,R.id.txt,new Categorie().getListeCategories());
         categorie.setAdapter(adapter);
 
 
@@ -105,11 +102,12 @@ public class AjoutBDD extends AppCompatActivity {
                         newLongitude = 0.0;
                     }
 
+
                     Site site = new Site(nom.getText().toString(),
                             newLatitude,
                             newLongitude,
                             adresse.getText().toString(),
-                            categorie.getSelectedItem().toString(),
+                            (Categorie) categorie.getSelectedItem(),
                             resume.getText().toString());
                     site.ajouterSite(getContentResolver(), site);
                     new AlertDialog.Builder(AjoutBDD.this).setTitle("").setMessage("Site ajouté!").setNeutralButton("Fermer", new DialogInterface.OnClickListener() {

@@ -23,7 +23,7 @@ public class Site implements BaseColumns {
     private double latitude;
     private double longitude;
     private String adresse;
-    private String categorie;
+    private Categorie categorie;
     private String resume;
 
     public Site() {
@@ -35,7 +35,7 @@ public class Site implements BaseColumns {
         this.longitude = longitude;
     }
 
-    public Site(String nom, double latitude, double longitude, String adresse, String categorie, String resume) {
+    public Site(String nom, double latitude, double longitude, String adresse, Categorie categorie, String resume) {
         this.nom = nom;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -97,7 +97,7 @@ public class Site implements BaseColumns {
         values.put(this.COLUMN_LATITUDE, site.getLatitude());
         values.put(this.COLUMN_LONGITUDE, site.getLongitude());
         values.put(this.COLUMN_ADRESSE, site.getAdresse());
-        values.put(this.COLUMN_CATEGORIE, site.getCategorie());
+        values.put(this.COLUMN_CATEGORIE, site.getCategorie().getLibelle());
         values.put(this.COLUMN_RESUME, site.getResume());
 
         return values;
@@ -144,11 +144,11 @@ public class Site implements BaseColumns {
         this.adresse = adresse;
     }
 
-    public String getCategorie() {
+    public Categorie getCategorie() {
         return categorie;
     }
 
-    public void setCategorie(String categorie) {
+    public void setCategorie(Categorie categorie) {
         this.categorie = categorie;
     }
 

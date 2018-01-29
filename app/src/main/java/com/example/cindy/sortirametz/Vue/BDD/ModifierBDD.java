@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
+import com.example.cindy.sortirametz.Vue.BDD.SpinnerCategorie.SpinnerAdapter;
 import com.google.android.gms.maps.model.LatLng;
 
 public class ModifierBDD extends AppCompatActivity {
@@ -46,7 +48,13 @@ public class ModifierBDD extends AppCompatActivity {
             site.setLatitude(Double.parseDouble(extras.getString("latitude")));
             site.setLongitude(Double.parseDouble(extras.getString("longitude")));
             site.setAdresse(extras.getString("adresse"));
-            site.setCategorie(extras.getString("categorie"));
+            // On recherche la catégorie
+            for(int i=0; i<new Categorie().getListeCategories().size();i++){
+                if(Categorie.listeCategories.get(i).getLibelle().equals(extras.getString("categorie")))
+                {
+                    site.setCategorie(Categorie.listeCategories.get(i));
+                }
+            }
             site.setResume(extras.getString("resume"));
             positionCourrante = new LatLng(extras.getDouble("positionLatitude"), extras.getDouble("positionLongitude"));
         }
@@ -58,11 +66,9 @@ public class ModifierBDD extends AppCompatActivity {
         categorie = (Spinner) findViewById(R.id.modifCategorie);
         resume = (EditText) findViewById(R.id.modifResume);
 
+        Log.d("TAG", site.getCategorie().getLibelle());
         /* Spinner */
-        String[] listeCategorie = Categorie.listeCategorie;
-
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_dropdown_item_1line,listeCategorie);
+        SpinnerAdapter adapter = new SpinnerAdapter(this, R.layout.spinner_categorie,R.id.txt,new Categorie().getListeCategories());
         categorie.setAdapter(adapter);
 
         nom.setText(site.getNom());
@@ -117,7 +123,7 @@ public class ModifierBDD extends AppCompatActivity {
                     site.setLatitude(newLatitude);
                     site.setLongitude(newLongitude);
                     site.setAdresse(adresse.getText().toString());
-                    site.setCategorie(categorie.getSelectedItem().toString());
+                    site.setCategorie((Categorie) categorie.getSelectedItem());
                     site.setResume(resume.getText().toString());
 
                     site.modifierSite(getContentResolver(), site);
