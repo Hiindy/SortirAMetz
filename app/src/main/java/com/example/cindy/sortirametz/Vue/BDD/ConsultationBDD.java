@@ -16,6 +16,7 @@ import android.widget.SimpleCursorAdapter;
 import com.example.cindy.sortirametz.BDD.BDDSqlLiteHelper;
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
+import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
 import com.google.android.gms.maps.model.LatLng;
 
 public class ConsultationBDD extends AppCompatActivity {
@@ -94,12 +95,18 @@ public class ConsultationBDD extends AppCompatActivity {
                 intentConsultation.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ConsultationBDD.this.startActivity(intentConsultation);
                 return true;
+            case R.id.ajouter:
             case R.id.ajout:
                 Intent intentAjout = new Intent(ConsultationBDD.this, AjoutBDD.class);
                 intentAjout.putExtra("positionLatitude", this.positionCourrante.latitude);
                 intentAjout.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ConsultationBDD.this.startActivity(intentAjout);
                 return true;
+
+            case R.id.map:
+                Intent intentCarte = new Intent(ConsultationBDD.this, ClientCarte.class);
+                ConsultationBDD.this.startActivity(intentCarte);
+                    return true;
             default:
                 return super.onOptionsItemSelected(item);
 

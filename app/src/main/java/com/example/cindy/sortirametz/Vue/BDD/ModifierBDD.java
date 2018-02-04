@@ -22,6 +22,7 @@ import com.example.cindy.sortirametz.BDD.Categorie;
 import com.example.cindy.sortirametz.BDD.Site;
 import com.example.cindy.sortirametz.R;
 import com.example.cindy.sortirametz.Vue.BDD.SpinnerCategorie.SpinnerAdapter;
+import com.example.cindy.sortirametz.Vue.Carte.ClientCarte;
 import com.google.android.gms.maps.model.LatLng;
 
 public class ModifierBDD extends AppCompatActivity {
@@ -191,17 +192,25 @@ public class ModifierBDD extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.consultation:
                 Intent intentConsultation = new Intent(ModifierBDD.this, ConsultationBDD.class);
+                intentConsultation.putExtra("positionLatitude", this.positionCourrante.latitude);
+                intentConsultation.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ModifierBDD.this.startActivity(intentConsultation);
                 return true;
+            case R.id.ajouter:
             case R.id.ajout:
                 Intent intentAjout = new Intent(ModifierBDD.this, ModifierBDD.class);
+                intentAjout.putExtra("positionLatitude", this.positionCourrante.latitude);
+                intentAjout.putExtra("positionLongitude", this.positionCourrante.longitude);
                 ModifierBDD.this.startActivity(intentAjout);
+                return true;
+            case R.id.map:
+                Intent intentCarte = new Intent(ModifierBDD.this, ClientCarte.class);
+                ModifierBDD.this.startActivity(intentCarte);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
 
         }
     }
-
 
 }

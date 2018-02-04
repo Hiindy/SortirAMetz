@@ -3,6 +3,17 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/map"
+        android:icon="@drawable/map"
+        android:title="retour_carte"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/ajouter"
+        android:icon="@drawable/ajouter"
+        android:title="ajouter"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/consultation"
         android:title="@string/bdd" />
     <item

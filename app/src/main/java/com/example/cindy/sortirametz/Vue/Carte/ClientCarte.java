@@ -287,40 +287,6 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                                     + "(" + site.getLatitude() + "," + site.getLongitude() + ")"));
 
                     listeMarqueursBis.put(marqueurSite, site);
-//                    Location locationSite = new Location("Site");
-//                    locationSite.setLatitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))));
-//                    locationSite.setLongitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE))));
-//                    MarkerOptions marqueurSite = new MarkerOptions();
-//                    if(myLocation.distanceTo(locationSite) < this.rayon){
-//                        if(!listeMarqueursBis.containsValue(site)){
-//                        listeMarqueursBis.put(marqueurSite, new Site(site.getString(site.getColumnIndex(Site.COLUMN_NOM)),
-//                                Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))),
-//                                Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE))),
-//                                site.getString(site.getColumnIndex(Site.COLUMN_ADRESSE)),
-//                                new Categorie(),
-//                                site.getString(site.getColumnIndex(Site.COLUMN_RESUME))));
-//                        }
-
-                       /* if(listeMarqueurs.contains(marqueurSite))
-                        {
-                            listeMarqueurs.get(listeMarqueurs.indexOf(marqueurSite)).visible(true);
-                        }
-                        else {
-                            listeMarqueurs.add(marqueurSite);
-                            listeMarqueursBis.put(marqueurSite, site);
-                        }*/
-//                    }
-//                    else{
-//                        if(!listeMarqueursBis.containsValue(site)){
-//                            listeMarqueursBis.remove()
-//                        }
-//                        /*if(listeMarqueurs.contains(marqueurSite)) {
-//                            Log.d("TAG", site.getString(site.getColumnIndex(Site.COLUMN_NOM)) + "  Test 1");
-//                            listeMarqueurs.get(listeMarqueurs.indexOf(marqueurSite)).visible(false);
-//                            supprimerMarqueur(marqueurSite, site);
-//                        }
-//                        Log.d("TAG", site.getString(site.getColumnIndex(Site.COLUMN_NOM)) + "  Test 2");*/
-//                    }
                 }
             } finally {
                 afficherMarqueurs();
