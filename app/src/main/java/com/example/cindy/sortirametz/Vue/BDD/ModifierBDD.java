@@ -66,7 +66,6 @@ public class ModifierBDD extends AppCompatActivity {
         categorie = (Spinner) findViewById(R.id.modifCategorie);
         resume = (EditText) findViewById(R.id.modifResume);
 
-        Log.d("TAG", site.getCategorie().getLibelle());
         /* Spinner */
         SpinnerAdapter adapter = new SpinnerAdapter(this, R.layout.spinner_categorie,R.id.txt,new Categorie().getListeCategories());
         categorie.setAdapter(adapter);
@@ -132,7 +131,8 @@ public class ModifierBDD extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent intentConsultation = new Intent(ModifierBDD.this, ConsultationBDD.class);
-
+                            intentConsultation.putExtra("positionLatitude", positionCourrante.latitude);
+                            intentConsultation.putExtra("positionLongitude", positionCourrante.longitude);
                             ModifierBDD.this.startActivity(intentConsultation);
                         }
                     }).show();
@@ -155,6 +155,8 @@ public class ModifierBDD extends AppCompatActivity {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         Intent intentConsultation = new Intent(ModifierBDD.this, ConsultationBDD.class);
+                                        intentConsultation.putExtra("positionLatitude", positionCourrante.latitude);
+                                        intentConsultation.putExtra("positionLongitude", positionCourrante.longitude);
 
                                         ModifierBDD.this.startActivity(intentConsultation);
                                     }

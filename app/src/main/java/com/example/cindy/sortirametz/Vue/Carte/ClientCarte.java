@@ -17,10 +17,12 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.cindy.sortirametz.BDD.Categorie;
@@ -44,21 +46,32 @@ import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback,GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnCameraMoveStartedListener{
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, GoogleMap.OnCameraMoveStartedListener {
 
     private GoogleMap mMap;
     private FusedLocationProviderClient mFusedLocationClient;
-    public Location myLocation = new Location("");;
+    public Location myLocation = new Location("");
+    ;
     private float rayon = 50;
     private SupportMapFragment mapFragment;
-    private  GoogleApiClient mGoogleApiClient;
+    private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
     private CircleOptions circleOptionsRayon;
     private Circle circleRayon;
     private boolean suivreUtilisateur;
+    private ArrayList<MarkerOptions> listeMarqueurs;
+    private Map<Marker, Site> listeMarqueursBis;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +86,8 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        listeMarqueurs = new ArrayList<>();
+        listeMarqueursBis = new HashMap<>();
 
 
         //ajouterSite();
@@ -121,8 +136,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 //Request Location Permission
                 checkLocationPermission();
             }
-        }
-        else {
+        } else {
             buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
@@ -139,7 +153,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
-    LocationCallback mLocationCallback = new LocationCallback(){
+    LocationCallback mLocationCallback = new LocationCallback() {
         @Override
         public void onLocationResult(LocationResult locationResult) {
             for (Location location : locationResult.getLocations()) {
@@ -147,28 +161,28 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
                 majCircle();
                 majMarqueurs();
-                Log.d("TAG", "Callback : 1" + suivreUtilisateur);
-                if(suivreUtilisateur)
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
+                if (suivreUtilisateur)
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 20));
             }
-        };
+        }
+
+        ;
 
     };
 
     private void majCircle() {
-         if(circleOptionsRayon == null) {
-             circleOptionsRayon = new CircleOptions()
-                .center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()))
-                     .radius(this.rayon)
-                     .strokeWidth(1)
-                     .strokeColor(Color.GREEN)
-                     .fillColor(0x5500ff00);
-             circleRayon = mMap.addCircle(circleOptionsRayon);
-         }
-         else
-         {
-             circleRayon.setCenter(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
-         }
+        if (circleOptionsRayon == null) {
+            circleOptionsRayon = new CircleOptions()
+                    .center(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()))
+                    .radius(this.rayon)
+                    .strokeWidth(1)
+                    .strokeColor(Color.GREEN)
+                    .fillColor(0x5500ff00);
+            circleRayon = mMap.addCircle(circleOptionsRayon);
+        } else {
+            circleRayon.setCenter(new LatLng(myLocation.getLatitude(), myLocation.getLongitude()));
+            circleRayon.setRadius(this.rayon);
+        }
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -186,6 +200,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_carte, menu);
 
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -198,6 +213,34 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 intentMain.putExtra("positionLongitude", this.myLocation.getLongitude());
                 ClientCarte.this.startActivity(intentMain);
                 return true;
+            case R.id.rayon:
+                AlertDialog.Builder alert = new AlertDialog.Builder(this);
+                alert.setMessage("Quel rayon ");
+
+                // Create EditText for entry
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_NUMBER);
+                alert.setView(input);
+
+                // Make an "OK" button to save the name
+                alert.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Grab the EditText's input
+                        String rayon = input.getText().toString();
+                        setRayon(Float.parseFloat(rayon));
+                    }
+                });
+
+                // Make a "Cancel" button
+                // that simply dismisses the alert
+                alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                    }
+                });
+
+                alert.show();
             default:
                 return super.onOptionsItemSelected(item);
 
@@ -223,43 +266,93 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public void majMarqueurs() {
-        Cursor site = Site.getAllSite(getContentResolver());
-        if (site != null) {
+        Cursor curseurSite = Site.getAllSite(getContentResolver());
+        if (curseurSite != null) {
             try {
-                while (site.moveToNext()) {
-                    Location locationSite = new Location("Site");
-                    locationSite.setLatitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))));
-                    locationSite.setLongitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE))));
-                    MarkerOptions marqueurSite = new MarkerOptions();
-                    if(myLocation.distanceTo(locationSite) < this.rayon){
-                        ajouterMarqueur(marqueurSite, site);
-                    }
-                    else{
-                        supprimerMarqueur(marqueurSite, site);
-                    }
+                while (curseurSite.moveToNext()) {
+                    Site site = new Site(
+                            curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_NOM)),
+                            Double.parseDouble(curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_LATITUDE))),
+                            Double.parseDouble(curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_LONGITUDE))),
+                            curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_ADRESSE)),
+                            new Categorie(),
+                            curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_RESUME))
+                    );
+                    Marker marqueurSite = mMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(site.getLatitude(), site.getLongitude()))
+                            .title(site.getNom())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
+                            .snippet(site.getAdresse() + "/"
+                                    + site.getResume() + "/"
+                                    + "(" + site.getLatitude() + "," + site.getLongitude() + ")"));
+
+                    listeMarqueursBis.put(marqueurSite, site);
+//                    Location locationSite = new Location("Site");
+//                    locationSite.setLatitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))));
+//                    locationSite.setLongitude(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE))));
+//                    MarkerOptions marqueurSite = new MarkerOptions();
+//                    if(myLocation.distanceTo(locationSite) < this.rayon){
+//                        if(!listeMarqueursBis.containsValue(site)){
+//                        listeMarqueursBis.put(marqueurSite, new Site(site.getString(site.getColumnIndex(Site.COLUMN_NOM)),
+//                                Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))),
+//                                Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE))),
+//                                site.getString(site.getColumnIndex(Site.COLUMN_ADRESSE)),
+//                                new Categorie(),
+//                                site.getString(site.getColumnIndex(Site.COLUMN_RESUME))));
+//                        }
+
+                       /* if(listeMarqueurs.contains(marqueurSite))
+                        {
+                            listeMarqueurs.get(listeMarqueurs.indexOf(marqueurSite)).visible(true);
+                        }
+                        else {
+                            listeMarqueurs.add(marqueurSite);
+                            listeMarqueursBis.put(marqueurSite, site);
+                        }*/
+//                    }
+//                    else{
+//                        if(!listeMarqueursBis.containsValue(site)){
+//                            listeMarqueursBis.remove()
+//                        }
+//                        /*if(listeMarqueurs.contains(marqueurSite)) {
+//                            Log.d("TAG", site.getString(site.getColumnIndex(Site.COLUMN_NOM)) + "  Test 1");
+//                            listeMarqueurs.get(listeMarqueurs.indexOf(marqueurSite)).visible(false);
+//                            supprimerMarqueur(marqueurSite, site);
+//                        }
+//                        Log.d("TAG", site.getString(site.getColumnIndex(Site.COLUMN_NOM)) + "  Test 2");*/
+//                    }
                 }
             } finally {
-                site.close();
+                afficherMarqueurs();
+                curseurSite.close();
+            }
+        }
+
+    }
+
+    private void afficherMarqueurs() {
+        if (!listeMarqueursBis.isEmpty()) {
+            Set<Map.Entry<Marker, Site>> setHm = listeMarqueursBis.entrySet();
+            Iterator<Map.Entry<Marker, Site>> it = setHm.iterator();
+            while (it.hasNext()) {
+                Map.Entry<Marker, Site> e = it.next();
+
+
+
+                Location locationSite = new Location("Site");
+                locationSite.setLatitude(e.getValue().getLatitude());
+                locationSite.setLongitude(e.getValue().getLongitude());
+                if (myLocation.distanceTo(locationSite) < this.rayon) {
+                    e.getKey().setVisible(true);
+                } else {
+                    e.getKey().setVisible(false);
+                }
+
+
             }
         }
     }
 
-    private void supprimerMarqueur(MarkerOptions marqueurSite, Cursor site) {
-        if(marqueurSite != null){
-            marqueurSite.visible(false);
-        }
-    }
-
-    private void ajouterMarqueur(MarkerOptions marqueurSite, Cursor site) {
-        marqueurSite.position(new LatLng(Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LATITUDE))),
-                Double.parseDouble(site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE)))));
-        marqueurSite.title(site.getString(site.getColumnIndex(Site.COLUMN_NOM)));
-        marqueurSite.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        marqueurSite.snippet(site.getString(site.getColumnIndex(Site.COLUMN_ADRESSE)) + "\n" + site.getString(site.getColumnIndex(Site.COLUMN_LONGITUDE)));
-
-
-        mMap.addMarker(marqueurSite);
-    }
 
     public Location getMyLocation() {
         return myLocation;
@@ -294,6 +387,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
     }
 
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -314,7 +408,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                                 //Prompt the user once explanation has been shown
                                 ActivityCompat.requestPermissions(ClientCarte.this,
                                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                        MY_PERMISSIONS_REQUEST_LOCATION );
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
                             }
                         })
                         .create()
@@ -325,7 +419,7 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                 // No explanation needed, we can request the permission.
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION );
+                        MY_PERMISSIONS_REQUEST_LOCATION);
             }
         }
     }
