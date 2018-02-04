@@ -1,8 +1,10 @@
 package com.example.cindy.sortirametz.Vue.Carte;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.cindy.sortirametz.R;
@@ -33,6 +35,7 @@ public class InfoWindowSite implements GoogleMap.InfoWindowAdapter {
         // On utilise la fonction split avec le paramètre '/' pour obtenir les différentes informations
         String[] infos = snippet.split("/");
 
+
         // On associe le TextView aux différents éléments de infos
         TextView titre = (TextView) vueSiteInfoContents.findViewById(R.id.info_site_nom);
         titre.setText(marker.getTitle());
@@ -46,6 +49,8 @@ public class InfoWindowSite implements GoogleMap.InfoWindowAdapter {
         TextView coordonnees = (TextView) vueSiteInfoContents.findViewById(R.id.info_site_coordonnees);
         coordonnees.setText(infos[2]);
 
+        ImageView imageView = (ImageView) vueSiteInfoContents.findViewById(R.id.image_categorie);
+        imageView.setImageResource(Integer.parseInt(infos[3]));
 
         return vueSiteInfoContents;
     }

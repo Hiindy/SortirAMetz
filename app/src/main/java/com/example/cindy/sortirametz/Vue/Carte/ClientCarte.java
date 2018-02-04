@@ -278,13 +278,22 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
                             new Categorie(),
                             curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_RESUME))
                     );
+                    // On recherche la catégorie
+                    for (int i = 0; i < new Categorie().getListeCategories().size(); i++) {
+                        if (Categorie.listeCategories.get(i).getLibelle().equals(curseurSite.getString(curseurSite.getColumnIndex(Site.COLUMN_CATEGORIE)))) {
+                            site.setCategorie(Categorie.listeCategories.get(i));
+                        }
+                    }
+
                     Marker marqueurSite = mMap.addMarker(new MarkerOptions()
                             .position(new LatLng(site.getLatitude(), site.getLongitude()))
                             .title(site.getNom())
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA))
                             .snippet(site.getAdresse() + "/"
                                     + site.getResume() + "/"
-                                    + "(" + site.getLatitude() + "," + site.getLongitude() + ")"));
+                                    + "(" + site.getLatitude() + "," + site.getLongitude() + ")" + "/"
+                                    + site.getCategorie().getImage())
+                    );
 
                     listeMarqueursBis.put(marqueurSite, site);
                 }
@@ -302,7 +311,6 @@ public class ClientCarte extends AppCompatActivity implements OnMapReadyCallback
             Iterator<Map.Entry<Marker, Site>> it = setHm.iterator();
             while (it.hasNext()) {
                 Map.Entry<Marker, Site> e = it.next();
-
 
 
                 Location locationSite = new Location("Site");
